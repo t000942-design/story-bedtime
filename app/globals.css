@@ -1,0 +1,171 @@
+@import "tailwindcss";
+
+:root {
+  --background: #1a1146;
+  --foreground: #fff7e6;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-quicksand);
+  --font-display: var(--font-fredoka);
+}
+
+html, body {
+  min-height: 100%;
+}
+
+body {
+  background: linear-gradient(180deg, #0f0a30 0%, #2a1758 28%, #4b2588 55%, #8b3fb8 82%, #d785d0 100%);
+  background-attachment: fixed;
+  color: var(--foreground);
+  font-family: var(--font-quicksand), system-ui, sans-serif;
+  overflow-x: hidden;
+  position: relative;
+}
+
+.font-display {
+  font-family: var(--font-fredoka), system-ui, sans-serif;
+}
+
+/* ---------- Background decorations ---------- */
+.bg-decor {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+
+/* Twinkling stars */
+@keyframes twinkle {
+  0%, 100% { opacity: 0.25; transform: scale(0.7); }
+  50%      { opacity: 1;    transform: scale(1.25); }
+}
+.star {
+  position: absolute;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 6px #fff, 0 0 12px #ffe9a8;
+  animation: twinkle ease-in-out infinite;
+}
+
+/* Floating moon */
+@keyframes moon-bob {
+  0%, 100% { transform: translateY(0) rotate(-8deg); }
+  50%      { transform: translateY(-14px) rotate(-4deg); }
+}
+.moon {
+  position: absolute;
+  top: 6%;
+  right: 8%;
+  font-size: 6rem;
+  filter: drop-shadow(0 0 30px #fff5c2) drop-shadow(0 0 60px #ffd86b);
+  animation: moon-bob 7s ease-in-out infinite;
+}
+
+/* Drifting clouds */
+@keyframes drift-right {
+  from { transform: translateX(-25vw); }
+  to   { transform: translateX(125vw); }
+}
+@keyframes drift-left {
+  from { transform: translateX(125vw); }
+  to   { transform: translateX(-25vw); }
+}
+.cloud {
+  position: absolute;
+  font-size: 5rem;
+  opacity: 0.85;
+  filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.5));
+  animation: drift-right linear infinite;
+}
+
+/* Flying creatures */
+@keyframes fly-across {
+  0%   { transform: translateX(-15vw) translateY(0); }
+  25%  { transform: translateX(15vw)  translateY(-25px); }
+  50%  { transform: translateX(50vw)  translateY(10px); }
+  75%  { transform: translateX(85vw)  translateY(-20px); }
+  100% { transform: translateX(115vw) translateY(0); }
+}
+@keyframes fly-back {
+  0%   { transform: translateX(115vw) translateY(0)      scaleX(-1); }
+  25%  { transform: translateX(85vw)  translateY(-30px) scaleX(-1); }
+  50%  { transform: translateX(50vw)  translateY(15px)  scaleX(-1); }
+  75%  { transform: translateX(15vw)  translateY(-15px) scaleX(-1); }
+  100% { transform: translateX(-15vw) translateY(0)      scaleX(-1); }
+}
+.flyer {
+  position: absolute;
+  font-size: 2.5rem;
+  filter: drop-shadow(0 0 8px rgba(255, 230, 150, 0.7));
+}
+
+/* Floating bobble */
+@keyframes bob {
+  0%, 100% { transform: translateY(0) rotate(-6deg); }
+  50%      { transform: translateY(-18px) rotate(6deg); }
+}
+.bobber {
+  position: absolute;
+  font-size: 2.6rem;
+  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.5));
+  animation: bob ease-in-out infinite;
+}
+
+/* Shooting star */
+@keyframes shoot {
+  0%   { transform: translate(0, 0)            rotate(-30deg); opacity: 0; }
+  8%   { opacity: 1; }
+  100% { transform: translate(70vw, 50vh)      rotate(-30deg); opacity: 0; }
+}
+.shooting-star {
+  position: absolute;
+  width: 110px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #fff 50%, #ffd86b);
+  border-radius: 999px;
+  filter: drop-shadow(0 0 6px #ffe9a8);
+  animation: shoot ease-in infinite;
+}
+
+/* Sparkles */
+@keyframes sparkle {
+  0%, 100% { opacity: 0; transform: scale(0.5) rotate(0deg); }
+  50%      { opacity: 1; transform: scale(1.2) rotate(180deg); }
+}
+.sparkle {
+  position: absolute;
+  font-size: 1.5rem;
+  animation: sparkle ease-in-out infinite;
+}
+
+/* ---------- UI helpers ---------- */
+.glass {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.glow-btn {
+  box-shadow: 0 0 24px rgba(255, 200, 120, 0.4), 0 8px 24px rgba(0, 0, 0, 0.3);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.glow-btn:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 0 36px rgba(255, 200, 120, 0.7), 0 12px 32px rgba(0, 0, 0, 0.4);
+}
+.glow-btn:active {
+  transform: translateY(0) scale(0.99);
+}
+
+@keyframes pop-in {
+  0%   { opacity: 0; transform: translateY(20px) scale(0.96); }
+  100% { opacity: 1; transform: translateY(0)    scale(1); }
+}
+.pop-in {
+  animation: pop-in 0.5s ease-out both;
+}
