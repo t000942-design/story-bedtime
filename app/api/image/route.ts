@@ -47,6 +47,8 @@ export async function GET(request: Request) {
         model: "google/gemini-2.5-flash-image",
         modalities: ["image", "text"],
         messages: [{ role: "user", content: styled }],
+        // Cap so the upfront budget check fits keys with low per-key spend limits.
+        max_tokens: 4096,
       }),
     });
   } catch (err) {

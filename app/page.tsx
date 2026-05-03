@@ -111,6 +111,19 @@ export default function Home() {
     generateStory(prompt);
   }
 
+  function speakWithBrowser(text: string) {
+    if (typeof window === "undefined" || !window.speechSynthesis) return false;
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.rate = 0.92;
+    u.pitch = 1.05;
+    u.onend = () => setSpeaking(false);
+    u.onerror = () => setSpeaking(false);
+    window.speechSynthesis.speak(u);
+    setSpeaking(true);
+    return true;
+  }
+
   async function readAloud() {
     if (!story) return;
     stopReading();
@@ -124,8 +137,12 @@ export default function Home() {
         body: JSON.stringify({ text }),
       });
       if (!res.ok) {
-        const detail = await res.text().catch(() => "");
-        throw new Error(detail || `Voice ${res.status}`);
+        // Graceful fallback: use the browser's built-in TTS so the button still works.
+        if (!speakWithBrowser(text)) {
+          const detail = await res.text().catch(() => "");
+          throw new Error(detail || `Voice ${res.status}`);
+        }
+        return;
       }
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);
@@ -143,7 +160,10 @@ export default function Home() {
       await audio.play();
       setSpeaking(true);
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Couldn't read aloud");
+      // Last-resort fallback to browser TTS if anything else exploded.
+      if (!speakWithBrowser(text)) {
+        setError(e instanceof Error ? e.message : "Couldn't read aloud");
+      }
     } finally {
       setAudioLoading(false);
     }
@@ -159,6 +179,7 @@ export default function Home() {
       URL.revokeObjectURL(audioUrlRef.current);
       audioUrlRef.current = null;
     }
+    if (typeof window !== "undefined") window.speechSynthesis?.cancel();
     setSpeaking(false);
   }
 
